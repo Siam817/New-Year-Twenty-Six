@@ -5,56 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy New Year 🎉</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
 <style>
-html, body {
-  margin:0; padding:0; width:100%; height:100%;
-  font-family:'Poppins',sans-serif;
-  background: linear-gradient(135deg,#020024,#090979,#00d4ff);
-  overflow:hidden;
-  display:flex; justify-content:center; align-items:center;
-  color:#fff;
-}
-canvas {
-  position:absolute; top:0; left:0; display:block; z-index:0;
-}
-.card {
-  position:relative; z-index:1;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(10px);
-  border-radius:20px;
-  padding:30px;
-  max-width:420px; width:90%;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,0.3);
-  animation:fadeIn 1.5s ease;
-}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(30px)}
-  to{opacity:1;transform:translateY(0)}
-}
-h1 { font-size:2.2rem; margin-bottom:10px; }
-h1 span { color:#ffd700; }
-p { font-size:1rem; margin-bottom:20px; line-height:1.6; }
-
-.wish {
-  position:relative;
-  bottom:-50px; 
-  font-size:1.1rem; 
-  color:#ffd700;
-  opacity:0;
-  animation:riseUp 3s ease forwards;
-}
-@keyframes riseUp {
-  0% { bottom:-50px; opacity:0; }
-  100% { bottom:0; opacity:1; }
-}
-
-footer { margin-top:25px; font-size:0.8rem; opacity:0.8; color:#fff; }
+  html, body {
+    margin:0; padding:0; width:100%; height:100%;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(135deg,#020024,#090979,#00d4ff);
+    overflow:hidden;
+    display:flex; justify-content:center; align-items:center;
+    color:#fff;
+  }
+  canvas {
+    position:absolute; top:0; left:0; display:block; z-index:0;
+  }
+  .card {
+    position:relative; z-index:1;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius:20px;
+    padding:30px;
+    max-width:420px; width:90%;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    animation:fadeIn 1.5s ease;
+  }
+  @keyframes fadeIn {
+    from{opacity:0;transform:translateY(30px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  h1 { font-size:2.2rem; margin-bottom:10px; }
+  h1 span { color:#ffd700; }
+  p { font-size:1rem; margin-bottom:20px; line-height:1.6; }
+  .wish {
+    position:relative;
+    font-size:1.1rem; 
+    color:#ffd700;
+    opacity:0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+  }
+  .wish.show {
+    opacity:1;
+    transform: translateY(0);
+  }
+  footer { margin-top:25px; font-size:0.8rem; opacity:0.8; color:#fff; }
 </style>
 </head>
-
 <body>
+
+<script src="https://pl29244987.profitablecpmratenetwork.com/13/bb/bd/13bbbd67bcacbf1342206ed88e2cd27a.js"></script>
 
 <canvas id="canvas"></canvas>
 
@@ -68,21 +67,16 @@ footer { margin-top:25px; font-size:0.8rem; opacity:0.8; color:#fff; }
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
-function resize(){
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resize(); window.addEventListener("resize", resize);
 
 let fireworks=[], particles=[];
 
 class Firework {
   constructor(){
-    this.x = canvas.width*0.25 + Math.random()*canvas.width*0.5;
+    this.x = canvas.width*0.2 + Math.random()*canvas.width*0.6;
     this.y = canvas.height;
-    this.ty = canvas.height*0.15;
+    this.ty = canvas.height*0.1 + Math.random()*canvas.height*0.3;
     this.speed = 4 + Math.random()*2;
     this.vy = -this.speed;
     this.color = `hsl(${Math.random()*360},100%,60%)`;
@@ -116,60 +110,61 @@ class Particle {
     this.angle = Math.random()*Math.PI*2;
     this.vx = Math.cos(this.angle)*this.speed;
     this.vy = Math.sin(this.angle)*this.speed;
-    this.gravity = 0.02;
+    this.gravity = 0.05;
     this.life = 60 + Math.random()*20;
     this.color = color;
-    this.size = 0.5 + Math.random()*0.3; 
+    this.size = 1 + Math.random()*1; 
   }
   update(){
     this.vy += this.gravity;
-    this.x += this.vx; 
-    this.y += this.vy;
+    this.x += this.vx; this.y += this.vy;
     this.life--; 
-    this.size *= 1.02;
+    this.size *= 0.98;
   }
   draw(){
+    ctx.globalAlpha = this.life / 80;
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
     ctx.fill();
+    ctx.globalAlpha = 1;
   }
 }
 
 function animate(){
-  ctx.fillStyle="rgba(0,0,0,0.1)";
+  ctx.fillStyle="rgba(0,0,0,0.15)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  fireworks.forEach(f=>{f.update(); f.draw();});
+  fireworks.forEach((f, i)=>{
+    f.update(); 
+    f.draw();
+    if(f.exploded) fireworks.splice(i, 1);
+  });
+
   particles.forEach((p,i)=>{
     p.update(); p.draw();
     if(p.life<=0) particles.splice(i,1);
   });
-
   requestAnimationFrame(animate);
 }
 
-// প্রতি ২ সেকেন্ডে ১টা
+// Firework intervals
 setInterval(() => fireworks.push(new Firework()), 2000);
-
-// প্রতি ১০ সেকেন্ডে ১০টা
 setInterval(() => {
-  for(let i=0; i<10; i++){
-    fireworks.push(new Firework());
+  for(let i=0; i<8; i++){
+    setTimeout(() => fireworks.push(new Firework()), i * 200);
   }
 }, 10000);
 
 animate();
 
-// Auto wish
+// Auto wish reveal
 setTimeout(() => {
-  document.getElementById('wish').innerHTML =
-  `Happy New Year! 🎊<br>May the new year bring you happiness, peace, and success 🌟`;
+  const wish = document.getElementById('wish');
+  wish.innerHTML = `Happy New Year! 🎊<br>May the new year bring you happiness, peace, and success 🌟`;
+  wish.classList.add('show');
 }, 3000);
+
 </script>
-
-<!-- 🔥 Ad Script (Last Script) -->
-<script src="https://pl29244987.profitablecpmratenetwork.com/13/bb/bd/13bbbd67bcacbf1342206ed88e2cd27a.js"></script>
-
 </body>
 </html>
